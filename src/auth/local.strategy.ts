@@ -2,6 +2,7 @@ import { Strategy } from 'passport-local';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { User } from 'src/users/users.service';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
@@ -14,7 +15,10 @@ export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
    * user객체가 null이면, 즉 비밀번호가 틀렸으면 에러를 던짐
    * 비밀번호가 맞으면 user객체 리턴
    */
-  async validate(username: string, password: string): Promise<any> {
+  async validate(
+    username: string,
+    password: string,
+  ): Promise<Omit<User, 'password'>> {
     const user = await this.authService.validateUser(username, password);
     if (!user) {
       throw new UnauthorizedException();

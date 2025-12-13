@@ -1,11 +1,12 @@
 import { Controller, Request, Post, UseGuards } from '@nestjs/common';
 import { LocalAuthGuard } from 'src/auth/local-auth.guard';
+import { User } from 'src/users/users.service';
 
 @Controller()
 export class AppController {
   @UseGuards(LocalAuthGuard)
   @Post('auth/login')
-  async login(@Request() req) {
+  async login(@Request() req: Request & { user: Omit<User, 'password'> }) {
     // local.strategy.ts에서 리턴한 값은 req에서 사용가능
     return req.user;
   }
