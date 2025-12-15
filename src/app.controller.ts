@@ -32,3 +32,11 @@ export class AppController {
  * 6. passport가 app.controller.ts의 login함수 req인자에 local.strategy.ts의 리턴값 할당
  * 7. login함수 실행
  */
+
+/**
+ * JWT도입 이후
+ * 1. auth.service.ts의 login함수에 jwtService를 통해 jwt를 리턴함
+ * 2. auth/login경로의 응답값으로 access_token을 응답해줌
+ * 3. jwt.strategy.ts파일에서 validate함수를 정의
+ * 4. @UseGuards(JwtAuthGuard)를 사용하면 api요청시 header의 Authorization안에 있는 access_token을 확인하며 검증
+ */
