@@ -1,9 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { User, UsersService } from '../users/users.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    private jwtService: JwtService,
+  ) {}
 
   /**
    * 로그인 요청시 비밀번호와 DB에서 가져온 비밀번호를 비교하는 함수
@@ -20,5 +24,13 @@ export class AuthService {
       return result;
     }
     return null;
+  }
+
+  async login(user: Omit<User, 'password'>) {
+    const payload = { username: user.username, sub: user.userId };
+
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
   }
 }

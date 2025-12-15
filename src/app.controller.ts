@@ -1,13 +1,23 @@
-import { Controller, Request, Post, UseGuards } from '@nestjs/common';
+import { Get, Controller, Request, Post, UseGuards } from '@nestjs/common';
+import { AuthService } from 'src/auth/auth.service';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { LocalAuthGuard } from 'src/auth/local-auth.guard';
 import { User } from 'src/users/users.service';
 
 @Controller()
 export class AppController {
+  constructor(private authService: AuthService) {}
+
   @UseGuards(LocalAuthGuard)
   @Post('auth/login')
   async login(@Request() req: Request & { user: Omit<User, 'password'> }) {
     // local.strategy.ts에서 리턴한 값은 req에서 사용가능
+    return this.authService.login(req.user);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  getProfile(@Request() req): Request & { user: Omit<User, 'password'> } {
     return req.user;
   }
 }
